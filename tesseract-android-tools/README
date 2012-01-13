@@ -1,0 +1,33 @@
+This project contains tools for compiling the Tesseract, Leptonica, and JPEG
+libraries for use on the Android platform. It contains an Eclipse Android
+library project that provides a Java API for accessing natively-compiled
+Tesseract and Leptonica APIs.
+
+NOTE: You must download and extract source files for the Tesseract, Leptonica,
+and Android JPEG libraries prior to building this library.
+
+To download the latest versions of these libraries and build this project, run
+the following commands in the terminal:
+
+cd <project-directory>
+mkdir external; cd external
+wget http://tesseract-ocr.googlecode.com/files/tesseract-3.00.tar.gz
+tar -zxvf tesseract-3.00.tar.gz
+rm -f tesseract-3.00.tar.gz
+wget http://leptonica.googlecode.com/files/leptonlib-1.66.tar.gz
+tar -zxvf leptonlib-1.66.tar.gz
+rm -f leptonlib-1.66.tar.gz
+git clone git://android.git.kernel.org/platform/external/jpeg.git libjpeg
+cd libjpeg
+git checkout e0eadaa39b72e33f032220246c771d7302ebeaf8
+cd ..
+export TESSERACT_PATH=${PWD}/tesseract-3.00
+export LEPTONICA_PATH=${PWD}/leptonlib-1.66
+export LIBJPEG_PATH=${PWD}/libjpeg
+cd ..
+ndk-build
+android update project --path .
+ant release
+
+You may also want to edit jni/Android.mk to reflect the correct library source
+directories and avoid running "export" every time you run ndk-build.
