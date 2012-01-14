@@ -182,13 +182,13 @@ public class WriteFile {
         if (pixs == null)
             throw new IllegalArgumentException("Source pix must be non-null");
 
-        int[] dimensions = pixs.getDimensions();
-        int width = dimensions[Pix.INDEX_W];
-        int height = dimensions[Pix.INDEX_H];
-        int depth = dimensions[Pix.INDEX_D];
+        final int[] dimensions = pixs.getDimensions();
+        final int width = dimensions[Pix.INDEX_W];
+        final int height = dimensions[Pix.INDEX_H];
+        //final int depth = dimensions[Pix.INDEX_D];
 
-        Bitmap.Config config = Bitmap.Config.ARGB_8888;
-        Bitmap bitmap = Bitmap.createBitmap(width, height, config);
+        final Bitmap.Config config = Bitmap.Config.ARGB_8888;
+        final Bitmap bitmap = Bitmap.createBitmap(width, height, config);
 
         if (nativeWriteBitmap(pixs.mNativePix, bitmap)) {
             return bitmap;

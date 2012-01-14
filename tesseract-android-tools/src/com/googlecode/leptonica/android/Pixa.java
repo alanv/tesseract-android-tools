@@ -335,23 +335,16 @@ public class Pixa implements Iterable<Pix> {
      * @return an ArrayList of Box bounding Rects
      */
     public ArrayList<Rect> getBoxRects() {
-        int pixaCount = nativeGetCount(mNativePixa);
-        int[] buffer = new int[4];
-
-        ArrayList<Rect> rects = new ArrayList<Rect>(pixaCount);
-
-        int x;
-        int y;
-        int[] dimensions = new int[4];
-        Rect bound;
+        final int pixaCount = nativeGetCount(mNativePixa);
+        final int[] buffer = new int[4];
+        final ArrayList<Rect> rects = new ArrayList<Rect>(pixaCount);
 
         for (int i = 0; i < pixaCount; i++) {
             getBoxGeometry(i, buffer);
 
-            x = buffer[Box.INDEX_X];
-            y = buffer[Box.INDEX_Y];
-
-            bound = new Rect(x, y, x + buffer[Box.INDEX_W], y + buffer[Box.INDEX_H]);
+            final int x = buffer[Box.INDEX_X];
+            final int y = buffer[Box.INDEX_Y];
+            final Rect bound = new Rect(x, y, x + buffer[Box.INDEX_W], y + buffer[Box.INDEX_H]);
 
             rects.add(bound);
         }
