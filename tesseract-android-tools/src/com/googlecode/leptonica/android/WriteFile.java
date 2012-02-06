@@ -17,7 +17,6 @@
 package com.googlecode.leptonica.android;
 
 import android.graphics.Bitmap;
-import android.os.Build;
 
 import java.io.File;
 
@@ -104,12 +103,7 @@ public class WriteFile {
 
         String rootname = new File(path, prefix).getAbsolutePath();
 
-        // TODO Fix support for JPEG library in Android 2.2 & lower
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) {
-            return nativeWriteFiles(pixas.mNativePixa, rootname, format);
-        } else {
-            throw new RuntimeException("writeFiles() is only available in SDK >= 10");
-        }
+        throw new RuntimeException("writeFiles() is not currently supported");
     }
 
     /**
