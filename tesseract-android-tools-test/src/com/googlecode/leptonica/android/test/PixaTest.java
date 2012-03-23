@@ -76,9 +76,9 @@ public class PixaTest extends TestCase {
         // Add a new Pix to the copy.
         addBlockToPixa(pixaCopy, 0, 0, 640, 640, 8);
 
-        // Ensure only the copy changed size.
-        assertEquals(pixaCopy.size(), initialCapacity + 1);
-        assertEquals(pixa.size(), initialCapacity);
+        // Ensure that both copies changed size.
+        assertEquals(initialCapacity + 1, pixaCopy.size());
+        assertEquals(pixaCopy.size(), pixa.size());
 
         // Finally, we should be able to recycle both Pixa.
         pixa.recycle();
@@ -104,7 +104,7 @@ public class PixaTest extends TestCase {
         int previousHeight = -1;
 
         for (int i = 0; i < pixa.size(); i++) {
-            assertTrue(pixa.getBoxGeometry(i, currentDimensions));
+            assertTrue(pixaSorted.getBoxGeometry(i, currentDimensions));
             int currentHeight = currentDimensions[Box.INDEX_H];
             assertTrue(currentHeight > previousHeight);
             previousHeight = currentHeight;
