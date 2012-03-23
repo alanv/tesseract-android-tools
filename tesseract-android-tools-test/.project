@@ -31,11 +31,4 @@
 		<nature>com.android.ide.eclipse.adt.AndroidNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>tesseract-android-tools_src</name>
-			<type>2</type>
-			<locationURI>_android_tesseract_android_tools_ce5fb1c4/src</locationURI>
-		</link>
-	</linkedResources>
 </projectDescription>

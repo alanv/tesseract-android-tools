@@ -15,8 +15,9 @@
  */
 
 #include "common.h"
-#include "string.h"
-#include "android/bitmap.h"
+
+#include <string.h>
+#include <android/bitmap.h>
 
 #ifdef __cplusplus
 extern "C" {
