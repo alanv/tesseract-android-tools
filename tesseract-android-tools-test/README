@@ -2,14 +2,9 @@ This project contains tests for the Tesseract and Leptonica libraries for use
 on the Android platform. See ../tesseract-android-tools/README for information
 on working with the libraries themselves.
 
-To build this project, run the following commands in the terminal:
-
-cd <project-directory>
-android update project --path .
-ant debug
-
-To download the English language files for Tesseract and copy them to your
-device's external storage, run the following commands in the terminal:
+You must install language data before attempting to run the tests. To download
+the English language files for Tesseract and copy them to your device's
+external storage, run the following commands in the terminal:
 
 cd <project-directory>
 curl -O http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.01.eng.tar.gz
@@ -19,3 +14,15 @@ mkdir data
 mv tesseract-ocr data/tesseract
 adb push data/ /sdcard/
 adb shell sync
+
+To build and test this project, run the following commands in the terminal:
+
+cd <project-directory>
+android update project --path .
+ant debug
+adb install -r -s bin/tesseract-android-tools-test-debug.apk
+adb shell am instrument -w -e class com.googlecode.tesseract.android.test.AllTests \
+    com.googlecode.tesseract.android.test/android.test.InstrumentationTestRunner
+
+If you receive an INSTALL_FAILED_INSUFFICIENT_STORAGE failure, try installing
+to internal storage by removing the -s flag from "adb install -r -s ..."
