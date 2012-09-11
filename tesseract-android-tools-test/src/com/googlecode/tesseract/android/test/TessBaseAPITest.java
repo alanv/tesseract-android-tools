@@ -80,7 +80,7 @@ public class TessBaseAPITest extends TestCase {
         // Attempt to initialize the API.
         final TessBaseAPI baseApi = new TessBaseAPI();
         baseApi.init(TESSBASE_PATH, DEFAULT_LANGUAGE);
-        baseApi.setPageSegMode(TessBaseAPI.PSM_SINGLE_LINE);
+        baseApi.setPageSegMode(TessBaseAPI.PageSegMode.PSM_SINGLE_LINE);
 
         // Set the image to a Bitmap containing "hello".
         final Bitmap bmp = Bitmap.createBitmap(640, 480, Bitmap.Config.ARGB_8888);

@@ -44,23 +44,46 @@ public class TessBaseAPI {
         nativeClassInit();
     }
 
-    /** Fully automatic page segmentation. */
-    public static final int PSM_AUTO = 0;
+    public static final class PageSegMode {
+        /** Orientation and script detection only. */
+        public static final int PSM_OSD_ONLY = 0;
 
-    /** Assume a single column of text of variable sizes. */
-    public static final int PSM_SINGLE_COLUMN = 1;
+        /**
+         * Automatic page segmentation with orientation and script detection.
+         * (OSD)
+         */
+        public static final int PSM_AUTO_OSD = 1;
 
-    /** Assume a single uniform block of text. (Default) */
-    public static final int PSM_SINGLE_BLOCK = 2;
+        /** Automatic page segmentation, but no OSD, or OCR. */
+        public static final int PSM_AUTO_ONLY = 2;
 
-    /** Treat the image as a single text line. */
-    public static final int PSM_SINGLE_LINE = 3;
+        /** Fully automatic page segmentation, but no OSD. */
+        public static final int PSM_AUTO = 3;
 
-    /** Treat the image as a single word. */
-    public static final int PSM_SINGLE_WORD = 4;
+        /** Assume a single column of text of variable sizes. */
+        public static final int PSM_SINGLE_COLUMN = 4;
 
-    /** Treat the image as a single character. */
-    public static final int PSM_SINGLE_CHAR = 5;
+        /** Assume a single uniform block of vertically aligned text. */
+        public static final int PSM_SINGLE_BLOCK_VERT_TEXT = 5;
+
+        /** Assume a single uniform block of text. (Default.) */
+        public static final int PSM_SINGLE_BLOCK = 6;
+
+        /** Treat the image as a single text line. */
+        public static final int PSM_SINGLE_LINE = 7;
+
+        /** Treat the image as a single word. */
+        public static final int PSM_SINGLE_WORD = 8;
+
+        /** Treat the image as a single word in a circle. */
+        public static final int PSM_CIRCLE_WORD = 9;
+
+        /** Treat the image as a single character. */
+        public static final int PSM_SINGLE_CHAR = 10;
+
+        /** Number of enum entries. */
+        public static final int PSM_COUNT = 11;
+    }
 
     /** Default accuracy versus speed mode. */
     public static final int AVS_FASTEST = 0;
