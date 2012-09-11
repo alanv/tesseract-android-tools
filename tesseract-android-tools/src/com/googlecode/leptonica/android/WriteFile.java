@@ -101,8 +101,6 @@ public class WriteFile {
         if (prefix == null)
             throw new IllegalArgumentException("Filename prefix must be non-null");
 
-        String rootname = new File(path, prefix).getAbsolutePath();
-
         throw new RuntimeException("writeFiles() is not currently supported");
     }
 
