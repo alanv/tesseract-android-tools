@@ -169,7 +169,7 @@ jfloat Java_com_googlecode_leptonica_android_Skew_nativeFindSkew(JNIEnv *env, jc
 
 jint Java_com_googlecode_leptonica_android_Rotate_nativeRotate(JNIEnv *env, jclass clazz,
                                                                jint nativePix, jfloat degrees,
-                                                               jboolean quality) {
+                                                               jboolean quality, jboolean resize) {
   PIX *pixd;
   PIX *pixs = (PIX *) nativePix;
 
@@ -183,7 +183,9 @@ jint Java_com_googlecode_leptonica_android_Rotate_nativeRotate(JNIEnv *env, jcla
     pixd = pixRotateBinaryNice(pixs, radians, L_BRING_IN_WHITE);
   } else {
     type = quality == JNI_TRUE ? L_ROTATE_AREA_MAP : L_ROTATE_SAMPLING;
-    pixd = pixRotate(pixs, radians, type, L_BRING_IN_WHITE, 0, 0);
+    w = (resize == JNI_TRUE) ? w : 0;
+    h = (resize == JNI_TRUE) ? h : 0;
+    pixd = pixRotate(pixs, radians, type, L_BRING_IN_WHITE, w, h);
   }
 
   return (jint) pixd;
