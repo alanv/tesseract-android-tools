@@ -17,7 +17,9 @@
 package com.googlecode.tesseract.android.test;
 
 import com.googlecode.leptonica.android.Pixa;
+import com.googlecode.tesseract.android.ResultIterator;
 import com.googlecode.tesseract.android.TessBaseAPI;
+import com.googlecode.tesseract.android.TessBaseAPI.PageIteratorLevel;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -103,7 +105,7 @@ public class TessBaseAPITest extends TestCase {
 
         // Ensure that the result is correct.
         final String outputText = baseApi.getUTF8Text();
-        assertTrue("\"" + outputText + "\" != \"" + inputText + "\"", inputText.equals(outputText));
+        assertEquals("\"" + outputText + "\" != \"" + inputText + "\"", inputText, outputText);
 
         // Ensure getRegions() works.
         final Pixa regions = baseApi.getRegions();
@@ -112,6 +114,22 @@ public class TessBaseAPITest extends TestCase {
         // Ensure getWords() works.
         final Pixa words = baseApi.getWords();
         assertEquals("Found one word", words.size(), 1);
+
+        // Iterate through the results.
+        final ResultIterator iterator = baseApi.getResultIterator();
+        String lastUTF8Text;
+        float lastConfidence;
+        int count = 0;
+        iterator.begin();
+        do {
+            lastUTF8Text = iterator.getUTF8Text(PageIteratorLevel.RIL_WORD);
+            lastConfidence = iterator.confidence(PageIteratorLevel.RIL_WORD);
+            count++;
+        } while (iterator.next(PageIteratorLevel.RIL_WORD));
+
+        assertEquals("Found only one result", count, 1);
+        assertEquals("Found the correct result", lastUTF8Text, outputText);
+        assertTrue("Result was high-confidence", lastConfidence > 80);
 
         // Attempt to shut down the API.
         baseApi.end();

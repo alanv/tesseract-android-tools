@@ -54,7 +54,9 @@ LOCAL_CFLAGS := \
 # jni
 
 LOCAL_SRC_FILES += \
-  tessbaseapi.cpp
+  pageiterator.cpp \
+  resultiterator.cpp \
+  tessbaseapi.cpp 
 
 LOCAL_C_INCLUDES += \
   $(LOCAL_PATH)

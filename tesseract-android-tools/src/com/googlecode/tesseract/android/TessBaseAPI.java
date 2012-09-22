@@ -29,7 +29,7 @@ import java.io.File;
  * Java interface for the Tesseract OCR engine. Does not implement all available
  * JNI methods, but does implement enough to be useful. Comments are adapted
  * from original Tesseract source.
- *
+ * 
  * @author alanv@google.com (Alan Viverette)
  */
 public class TessBaseAPI {
@@ -86,6 +86,31 @@ public class TessBaseAPI {
         public static final int PSM_COUNT = 11;
     }
 
+    /**
+     * Elements of the page hierarchy, used in {@link ResultIterator} to provide
+     * functions that operate on each level without having to have 5x as many
+     * functions.
+     * <p>
+     * NOTE: At present {@link #RIL_PARA} and {@link #RIL_BLOCK} are equivalent
+     * as there is no paragraph internally yet.
+     */
+    public static final class PageIteratorLevel {
+        /** Block of text/image/separator line. */
+        public static final int RIL_BLOCK = 0;
+
+        /** Paragraph within a block. */
+        public static final int RIL_PARA = 1;
+
+        /** Line within a paragraph. */
+        public static final int RIL_TEXTLINE = 2;
+
+        /** Word within a text line. */
+        public static final int RIL_WORD = 3;
+
+        /** Symbol/character within a word. */
+        public static final int RIL_SYMBOL = 4;
+    };
+
     /** Default accuracy versus speed mode. */
     public static final int AVS_FASTEST = 0;
 
@@ -133,10 +158,10 @@ public class TessBaseAPI {
      * <p>
      * The datapath must be the name of the parent directory of tessdata and
      * must end in / . Any name after the last / will be stripped. The language
-     * is (usually) an ISO 639-3 string or <code>null</code> will default to eng.
-     * It is entirely safe (and eventually will be efficient too) to call Init
-     * multiple times on the same instance to change language, or just to reset
-     * the classifier.
+     * is (usually) an ISO 639-3 string or <code>null</code> will default to
+     * eng. It is entirely safe (and eventually will be efficient too) to call
+     * Init multiple times on the same instance to change language, or just to
+     * reset the classifier.
      * <p>
      * <b>WARNING:</b> On changing languages, all Tesseract parameters are reset
      * back to their default values. (Which may vary between languages.)
@@ -145,21 +170,24 @@ public class TessBaseAPI {
      * for a second call to Init you should explicitly call End() and then use
      * SetVariable before Init. This is only a very rare use case, since there
      * are very few uses that require any parameters to be set before Init.
-     *
+     * 
      * @param datapath the parent directory of tessdata ending in a forward
      *            slash
      * @param language (optional) an ISO 639-3 string representing the language
      * @return <code>true</code> on success
      */
     public boolean init(String datapath, String language) {
-        if (datapath == null)
+        if (datapath == null) {
             throw new IllegalArgumentException("Data path must not be null!");
-        if (!datapath.endsWith(File.separator))
+        }
+        if (!datapath.endsWith(File.separator)) {
             datapath += File.separator;
+        }
 
         File tessdata = new File(datapath + "tessdata");
-        if (!tessdata.exists() || !tessdata.isDirectory())
+        if (!tessdata.exists() || !tessdata.isDirectory()) {
             throw new IllegalArgumentException("Data path must contain subfolder tessdata!");
+        }
 
         return nativeInit(datapath, language);
     }
@@ -190,11 +218,12 @@ public class TessBaseAPI {
      * Supply the name of the variable and the value as a string, just as you
      * would in a config file.
      * <p>
-     * Example: <code>setVariable(VAR_TESSEDIT_CHAR_BLACKLIST, "xyz"); to ignore x, y and z. * setVariable(VAR_BLN_NUMERICMODE, "1"); to set numeric-only mode. * </code>
+     * Example:
+     * <code>setVariable(VAR_TESSEDIT_CHAR_BLACKLIST, "xyz"); to ignore x, y and z. * setVariable(VAR_BLN_NUMERICMODE, "1"); to set numeric-only mode. * </code>
      * <p>
      * setVariable() may be used before open(), but settings will revert to
      * defaults on close().
-     *
+     * 
      * @param var name of the variable
      * @param value value to set
      * @return false if the name lookup failed
@@ -206,7 +235,7 @@ public class TessBaseAPI {
     /**
      * Sets the page segmentation mode. This controls how much processing the
      * OCR engine will perform before recognizing text.
-     *
+     * 
      * @param mode the page segmentation mode to set
      */
     public void setPageSegMode(int mode) {
@@ -216,7 +245,7 @@ public class TessBaseAPI {
     /**
      * Sets debug mode. This controls how much information is displayed in the
      * log during recognition.
-     *
+     * 
      * @param enabled <code>true</code> to enable debugging mode
      */
     public void setDebug(boolean enabled) {
@@ -227,7 +256,7 @@ public class TessBaseAPI {
      * Restricts recognition to a sub-rectangle of the image. Call after
      * SetImage. Each SetRectangle clears the recogntion results so multiple
      * rectangles can be recognized with the same image.
-     *
+     * 
      * @param rect the bounding rectangle
      */
     public void setRectangle(Rect rect) {
@@ -238,7 +267,7 @@ public class TessBaseAPI {
      * Restricts recognition to a sub-rectangle of the image. Call after
      * SetImage. Each SetRectangle clears the recogntion results so multiple
      * rectangles can be recognized with the same image.
-     *
+     * 
      * @param left the left bound
      * @param top the right bound
      * @param width the width of the bounding box
@@ -250,7 +279,7 @@ public class TessBaseAPI {
 
     /**
      * Provides an image for Tesseract to recognize.
-     *
+     * 
      * @param file absolute path to the image file
      */
     public void setImage(File file) {
@@ -267,7 +296,7 @@ public class TessBaseAPI {
      * Provides an image for Tesseract to recognize. Does not copy the image
      * buffer. The source image must persist until after Recognize or
      * GetUTF8Chars is called.
-     *
+     * 
      * @param bmp bitmap representation of the image
      */
     public void setImage(Bitmap bmp) {
@@ -284,7 +313,7 @@ public class TessBaseAPI {
      * Provides a Leptonica pix format image for Tesseract to recognize. Clones
      * the pix object. The source image may be destroyed immediately after
      * SetImage is called, but its contents may not be modified.
-     *
+     * 
      * @param image Leptonica pix representation of the image
      */
     public void setImage(Pix image) {
@@ -297,7 +326,7 @@ public class TessBaseAPI {
      * SetImage clears all recognition results, and sets the rectangle to the
      * full image, so it may be followed immediately by a GetUTF8Text, and it
      * will automatically perform recognition.
-     *
+     * 
      * @param imagedata byte representation of the image
      * @param width image width
      * @param height image height
@@ -310,7 +339,7 @@ public class TessBaseAPI {
 
     /**
      * The recognized text is returned as a String which is coded as UTF8.
-     *
+     * 
      * @return the recognized text
      */
     public String getUTF8Text() {
@@ -319,28 +348,30 @@ public class TessBaseAPI {
 
         return text.trim();
     }
-    
+
     public Pixa getRegions() {
         int pixa = nativeGetRegions();
-        
-        if (pixa == 0)
+
+        if (pixa == 0) {
             return null;
-        
+        }
+
         return new Pixa(pixa, 0, 0);
     }
-    
+
     public Pixa getWords() {
         int pixa = nativeGetWords();
-        
-        if (pixa == 0)
+
+        if (pixa == 0) {
             return null;
-        
+        }
+
         return new Pixa(pixa, 0, 0);
     }
 
     /**
      * Returns the mean confidence of text recognition.
-     *
+     * 
      * @return the mean confidence
      */
     public int meanConfidence() {
@@ -351,7 +382,7 @@ public class TessBaseAPI {
      * Returns all word confidences (between 0 and 100) in an array. The number
      * of confidences should correspond to the number of space-delimited words
      * in GetUTF8Text().
-     *
+     * 
      * @return an array of word confidences (between 0 and 100) for each
      *         space-delimited word returned by GetUTF8Text()
      */
@@ -359,10 +390,21 @@ public class TessBaseAPI {
         int[] conf = nativeWordConfidences();
 
         // We shouldn't return null confidences
-        if (conf == null)
+        if (conf == null) {
             conf = new int[0];
+        }
 
         return conf;
+    }
+
+    public ResultIterator getResultIterator() {
+        int nativeResultIterator = nativeGetResultIterator();
+
+        if (nativeResultIterator == 0) {
+            return null;
+        }
+
+        return new ResultIterator(nativeResultIterator);
     }
 
     // ******************
@@ -412,5 +454,7 @@ public class TessBaseAPI {
     private native void nativeSetDebug(boolean debug);
 
     private native void nativeSetPageSegMode(int mode);
+
+    private native int nativeGetResultIterator();
 
 }

@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2011 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -37,7 +37,7 @@ public class Pix {
     /** Index of the image bit-depth within the dimensions array. */
     public static final int INDEX_D = 2;
 
-    /** Package-accessible pointer to native pix */
+    /** Package-accessible pointer to native pix. */
     final int mNativePix;
 
     private boolean mRecycled;
@@ -53,7 +53,7 @@ public class Pix {
         mNativePix = nativePix;
         mRecycled = false;
     }
-    
+
     public Pix(int width, int height, int depth) {
         if (width <= 0 || height <= 0) {
             throw new IllegalArgumentException("Pix width and height must be > 0");
@@ -239,7 +239,7 @@ public class Pix {
     public int getDepth() {
         return nativeGetDepth(mNativePix);
     }
-    
+
     /**
      * Returns the {@link android.graphics.Color} at the specified location.
      *
@@ -261,7 +261,7 @@ public class Pix {
 
     /**
      * Sets the {@link android.graphics.Color} at the specified location.
-     * 
+     *
      * @param x The x coordinate (0...width-1) of the pixel to set.
      * @param y The y coordinate (0...height-1) of the pixel to set.
      * @param color The argb {@link android.graphics.Color} to set at the
