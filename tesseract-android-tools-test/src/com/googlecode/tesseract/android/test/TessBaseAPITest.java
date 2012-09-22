@@ -16,20 +16,20 @@
 
 package com.googlecode.tesseract.android.test;
 
+import com.googlecode.leptonica.android.Pixa;
+import com.googlecode.tesseract.android.TessBaseAPI;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Paint.Style;
-import android.graphics.Rect;
 import android.test.suitebuilder.annotation.SmallTest;
 
-import com.googlecode.tesseract.android.TessBaseAPI;
+import java.io.File;
 
 import junit.framework.TestCase;
-
-import java.io.File;
 
 public class TessBaseAPITest extends TestCase {
     private static final String TESSBASE_PATH = "/mnt/sdcard/tesseract/";
@@ -69,6 +69,23 @@ public class TessBaseAPITest extends TestCase {
         baseApi.end();
     }
 
+    private static Bitmap getTextImage(String text, int width, int height) {
+        final Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        final Paint paint = new Paint();
+        final Canvas canvas = new Canvas(bmp);
+
+        canvas.drawColor(Color.WHITE);
+
+        paint.setColor(Color.BLACK);
+        paint.setStyle(Style.FILL);
+        paint.setAntiAlias(true);
+        paint.setTextAlign(Align.CENTER);
+        paint.setTextSize(24.0f);
+        canvas.drawText(text, width / 2, height / 2, paint);
+
+        return bmp;
+    }
+
     @SmallTest
     public void testGetUTF8Text() {
         // First, make sure the eng.traineddata file exists.
@@ -76,33 +93,25 @@ public class TessBaseAPITest extends TestCase {
                 + EXPECTED_FILE, new File(EXPECTED_FILE).exists());
 
         final String inputText = "hello";
+        final Bitmap bmp = getTextImage(inputText, 640, 480);
 
         // Attempt to initialize the API.
         final TessBaseAPI baseApi = new TessBaseAPI();
         baseApi.init(TESSBASE_PATH, DEFAULT_LANGUAGE);
         baseApi.setPageSegMode(TessBaseAPI.PageSegMode.PSM_SINGLE_LINE);
-
-        // Set the image to a Bitmap containing "hello".
-        final Bitmap bmp = Bitmap.createBitmap(640, 480, Bitmap.Config.ARGB_8888);
-        final Paint paint = new Paint();
-        final Canvas canvas = new Canvas(bmp);
-
-        paint.setColor(Color.WHITE);
-        paint.setStyle(Style.FILL);
-        canvas.drawRect(new Rect(0, 0, 640, 480), paint);
-
-        paint.setColor(Color.BLACK);
-        paint.setStyle(Style.FILL);
-        paint.setAntiAlias(true);
-        paint.setTextAlign(Align.CENTER);
-        paint.setTextSize(24.0f);
-        canvas.drawText(inputText, 320, 240, paint);
-
         baseApi.setImage(bmp);
 
         // Ensure that the result is correct.
         final String outputText = baseApi.getUTF8Text();
         assertTrue("\"" + outputText + "\" != \"" + inputText + "\"", inputText.equals(outputText));
+
+        // Ensure getRegions() works.
+        final Pixa regions = baseApi.getRegions();
+        assertEquals("Found one region", regions.size(), 1);
+
+        // Ensure getWords() works.
+        final Pixa words = baseApi.getWords();
+        assertEquals("Found one word", words.size(), 1);
 
         // Attempt to shut down the API.
         baseApi.end();

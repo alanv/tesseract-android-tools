@@ -179,6 +179,30 @@ jstring Java_com_googlecode_tesseract_android_TessBaseAPI_nativeGetUTF8Text(JNIE
   return result;
 }
 
+jint Java_com_googlecode_tesseract_android_TessBaseAPI_nativeGetRegions(JNIEnv *env,
+		                                                                   jobject thiz) {
+  native_data_t *nat = get_native_data(env, thiz);
+  Pixa *pixa;
+  Boxa *boxa = nat->api.GetRegions(&pixa);
+  if (boxa != NULL) {
+	  boxaDestroy(&boxa);
+  }
+
+  return (int) pixa;
+}
+
+jint Java_com_googlecode_tesseract_android_TessBaseAPI_nativeGetWords(JNIEnv *env,
+		                                                              jobject thiz) {
+  native_data_t *nat = get_native_data(env, thiz);
+  Pixa *pixa;
+  Boxa *boxa = nat->api.GetWords(&pixa);
+  if (boxa != NULL) {
+	  boxaDestroy(&boxa);
+  }
+
+  return (int) pixa;
+}
+
 void Java_com_googlecode_tesseract_android_TessBaseAPI_nativeStop(JNIEnv *env, jobject thiz) {
   native_data_t *nat = get_native_data(env, thiz);
 

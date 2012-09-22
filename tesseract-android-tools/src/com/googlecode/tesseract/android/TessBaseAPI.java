@@ -16,11 +16,12 @@
 
 package com.googlecode.tesseract.android;
 
+import com.googlecode.leptonica.android.Pix;
+import com.googlecode.leptonica.android.Pixa;
+import com.googlecode.leptonica.android.ReadFile;
+
 import android.graphics.Bitmap;
 import android.graphics.Rect;
-
-import com.googlecode.leptonica.android.Pix;
-import com.googlecode.leptonica.android.ReadFile;
 
 import java.io.File;
 
@@ -318,6 +319,24 @@ public class TessBaseAPI {
 
         return text.trim();
     }
+    
+    public Pixa getRegions() {
+        int pixa = nativeGetRegions();
+        
+        if (pixa == 0)
+            return null;
+        
+        return new Pixa(pixa, 0, 0);
+    }
+    
+    public Pixa getWords() {
+        int pixa = nativeGetWords();
+        
+        if (pixa == 0)
+            return null;
+        
+        return new Pixa(pixa, 0, 0);
+    }
 
     /**
      * Returns the mean confidence of text recognition.
@@ -379,6 +398,10 @@ public class TessBaseAPI {
     private native void nativeSetRectangle(int left, int top, int width, int height);
 
     private native String nativeGetUTF8Text();
+
+    private native int nativeGetRegions();
+
+    private native int nativeGetWords();
 
     private native int nativeMeanConfidence();
 
