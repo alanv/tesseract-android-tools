@@ -16,12 +16,12 @@
 
 package com.googlecode.tesseract.android;
 
+import android.graphics.Bitmap;
+import android.graphics.Rect;
+
 import com.googlecode.leptonica.android.Pix;
 import com.googlecode.leptonica.android.Pixa;
 import com.googlecode.leptonica.android.ReadFile;
-
-import android.graphics.Bitmap;
-import android.graphics.Rect;
 
 import java.io.File;
 
@@ -29,7 +29,7 @@ import java.io.File;
  * Java interface for the Tesseract OCR engine. Does not implement all available
  * JNI methods, but does implement enough to be useful. Comments are adapted
  * from original Tesseract source.
- * 
+ *
  * @author alanv@google.com (Alan Viverette)
  */
 public class TessBaseAPI {
@@ -109,7 +109,7 @@ public class TessBaseAPI {
 
         /** Symbol/character within a word. */
         public static final int RIL_SYMBOL = 4;
-    };
+    }
 
     /** Default accuracy versus speed mode. */
     public static final int AVS_FASTEST = 0;
@@ -170,7 +170,7 @@ public class TessBaseAPI {
      * for a second call to Init you should explicitly call End() and then use
      * SetVariable before Init. This is only a very rare use case, since there
      * are very few uses that require any parameters to be set before Init.
-     * 
+     *
      * @param datapath the parent directory of tessdata ending in a forward
      *            slash
      * @param language (optional) an ISO 639-3 string representing the language
@@ -223,7 +223,7 @@ public class TessBaseAPI {
      * <p>
      * setVariable() may be used before open(), but settings will revert to
      * defaults on close().
-     * 
+     *
      * @param var name of the variable
      * @param value value to set
      * @return false if the name lookup failed
@@ -235,7 +235,7 @@ public class TessBaseAPI {
     /**
      * Sets the page segmentation mode. This controls how much processing the
      * OCR engine will perform before recognizing text.
-     * 
+     *
      * @param mode the page segmentation mode to set
      */
     public void setPageSegMode(int mode) {
@@ -245,7 +245,7 @@ public class TessBaseAPI {
     /**
      * Sets debug mode. This controls how much information is displayed in the
      * log during recognition.
-     * 
+     *
      * @param enabled <code>true</code> to enable debugging mode
      */
     public void setDebug(boolean enabled) {
@@ -256,7 +256,7 @@ public class TessBaseAPI {
      * Restricts recognition to a sub-rectangle of the image. Call after
      * SetImage. Each SetRectangle clears the recogntion results so multiple
      * rectangles can be recognized with the same image.
-     * 
+     *
      * @param rect the bounding rectangle
      */
     public void setRectangle(Rect rect) {
@@ -267,7 +267,7 @@ public class TessBaseAPI {
      * Restricts recognition to a sub-rectangle of the image. Call after
      * SetImage. Each SetRectangle clears the recogntion results so multiple
      * rectangles can be recognized with the same image.
-     * 
+     *
      * @param left the left bound
      * @param top the right bound
      * @param width the width of the bounding box
@@ -279,7 +279,7 @@ public class TessBaseAPI {
 
     /**
      * Provides an image for Tesseract to recognize.
-     * 
+     *
      * @param file absolute path to the image file
      */
     public void setImage(File file) {
@@ -296,7 +296,7 @@ public class TessBaseAPI {
      * Provides an image for Tesseract to recognize. Does not copy the image
      * buffer. The source image must persist until after Recognize or
      * GetUTF8Chars is called.
-     * 
+     *
      * @param bmp bitmap representation of the image
      */
     public void setImage(Bitmap bmp) {
@@ -313,7 +313,7 @@ public class TessBaseAPI {
      * Provides a Leptonica pix format image for Tesseract to recognize. Clones
      * the pix object. The source image may be destroyed immediately after
      * SetImage is called, but its contents may not be modified.
-     * 
+     *
      * @param image Leptonica pix representation of the image
      */
     public void setImage(Pix image) {
@@ -326,7 +326,7 @@ public class TessBaseAPI {
      * SetImage clears all recognition results, and sets the rectangle to the
      * full image, so it may be followed immediately by a GetUTF8Text, and it
      * will automatically perform recognition.
-     * 
+     *
      * @param imagedata byte representation of the image
      * @param width image width
      * @param height image height
@@ -339,7 +339,7 @@ public class TessBaseAPI {
 
     /**
      * The recognized text is returned as a String which is coded as UTF8.
-     * 
+     *
      * @return the recognized text
      */
     public String getUTF8Text() {
@@ -371,7 +371,7 @@ public class TessBaseAPI {
 
     /**
      * Returns the mean confidence of text recognition.
-     * 
+     *
      * @return the mean confidence
      */
     public int meanConfidence() {
@@ -382,7 +382,7 @@ public class TessBaseAPI {
      * Returns all word confidences (between 0 and 100) in an array. The number
      * of confidences should correspond to the number of space-delimited words
      * in GetUTF8Text().
-     * 
+     *
      * @return an array of word confidences (between 0 and 100) for each
      *         space-delimited word returned by GetUTF8Text()
      */

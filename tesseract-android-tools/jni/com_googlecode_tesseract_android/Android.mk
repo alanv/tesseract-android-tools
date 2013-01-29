@@ -51,6 +51,15 @@ LOCAL_CFLAGS := \
   -include ctype.h \
   -include unistd.h \
 
+# missing glibc functions
+
+ifneq ($(TARGET_SIMULATOR),true)
+LOCAL_SRC_FILES += \
+  glibc/glob.c
+LOCAL_C_INCLUDES += \
+  $(LOCAL_PATH)/glibc
+endif
+
 # jni
 
 LOCAL_SRC_FILES += \
