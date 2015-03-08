@@ -1,0 +1,1 @@
+Tesseract Tools for Android provides a set of Android APIs and build files for the Tesseract OCR and Leptonica image processing libraries.
